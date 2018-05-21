@@ -54,6 +54,76 @@
 				
 		if ($success)
 			output_success_text('Asset successfully issued in transaction '.$issuetxid);
+
+					// post to create file pdf
+		$data = array(
+			'txid' => $issuetxid,
+			'truong' => $_POST['value0'],
+			'loaibang' => $_POST['type'],
+			'nganhdaotao' => $_POST['value5'],
+			'hoten' => $_POST['value1'],
+			'mssv' => $_POST['value2'],
+			'ngaysinh' => $_POST['value5'],
+			'gioitinh' => $_POST['value3'],
+			'xeploai' => $_POST['value6'],
+			'hinhthucdaotao' => $_POST['value7'],
+			'namtotnghiep' => $_POST['value8'],
+			'filename' => $name
+		);
+		# Create a connection
+		require('tfpdf.php');
+		$pdf = new tFPDF();
+		$pdf->AddPage('L');
+
+		// Add a Unicode font (uses UTF-8)
+		$pdf->AddFont('DejaVu','','DejaVuSansCondensed.ttf',true);
+
+		$pdf->SetFont('DejaVu','',0.1);
+		$pdf->Cell(0,0,$issuetxid.";",1,0,"C");
+
+
+		$pdf->SetFont('DejaVu','',36);
+		$pdf->Ln(40);
+		$truong = '';
+		if($_POST['value0'] == "UIT")
+			$truong = "TRƯỜNG ĐẠI HỌC CÔNG NGHỆ THÔNG TIN";
+		$pdf->Cell(0,0,$truong,0,0,"C");
+
+		$pdf->SetFont('DejaVu','',18);
+		$pdf->Ln(15);
+		$pdf->Cell(0,0,"Cấp",0,0,"C");
+
+		$pdf->SetFont('DejaVu','',60);
+		$pdf->Ln(10);
+		$loaibang='';
+		if($_POST['type'] == "BangTotNghiep")
+			$loaibang="BẰNG TỐT NGHIỆP";
+		else if($_POST['type'] == "BangCuNhan")
+			$loaibang="BẰNG CỬ NHÂN";
+		else if($_POST['type'] == "BangKiSu")
+			$loaibang="BẰNG KĨ SƯ";
+		else if($_POST['type'] == "ChungChi")
+			$loaibang="CHỨNG CHỈ";
+		$pdf->Cell(0,30,$loaibang,0,0,"C");
+		
+		$pdf->SetFont('DejaVu','',20);
+		$pdf->Ln(15);
+		$pdf->Cell(0,30,$_POST['value8'],0,0,"C");
+
+		$pdf->SetFont('DejaVu','',16);
+		$pdf->Ln(40);
+		$pdf->Cell(0,0,"        Cho: ".$_POST['value1'].". MSSV: ".$_POST['value2'],0,0,"L");
+		$pdf->Ln(10);
+		$pdf->Cell(0,0,"        Giới tính: ".$_POST['value3'],0,0,"L");
+		$pdf->Ln(10);
+		$pdf->Cell(0,0,"        Sinh ngày: ".$_POST['value5'],0,0,"L");
+		$pdf->Ln(10);
+		$pdf->Cell(0,0,"        Xếp Loại: ".$_POST['value6'],0,0,"L");
+		$pdf->Ln(10);
+		$pdf->Cell(0,0,"        Hình thức đào tạo: ".$_POST['value7'],0,0,"L");
+
+		// $pdf->Output();
+		$pdf->Output('file/'.$name.'.pdf');
 	}
 
 	$getinfo=multichain_getinfo();

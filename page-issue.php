@@ -21,7 +21,7 @@
 		for ($index=0; $index<const_issue_custom_fields; $index++)
 			if (strlen(@$_POST['key'.$index]))
 				$custom[$_POST['key'.$index]]=$_POST['value'.$index];
-		$name = $_POST['type'].'_'.$_POST['value0'].'_'.$_POST['value2'].'_'.$_POST['value8'];
+		$name = $_POST['type'].'_'.'UIT'.'_'.$_POST['value2'].'_'.$_POST['value8'];
 		$datas=array( // to create array of data items
 			array( // metadata for issuance details
 				'name' => $name,
@@ -54,6 +54,9 @@
 				
 		if ($success)
 			output_success_text('Asset successfully issued in transaction '.$issuetxid);
+
+
+
 	}
 
 	$getinfo=multichain_getinfo();
@@ -174,7 +177,9 @@ if(count($issueaddresses) > 0){
 								<input class="form-control input-sm" name="key0" id="key0" value="school">
 							</div>
 							<div class="col-sm-6">
-								<input class="form-control input-sm" name="value0" id="value0" value="UIT">
+								<select name="value0" id="value0">
+									<option value="UIT">Trường Đại Học Công Nghệ Thông Tin</option>
+								</select>
 							</div>
 						</div>
 
@@ -237,7 +242,12 @@ if(count($issueaddresses) > 0){
 								<input class="form-control input-sm" name="key6" id="key6" value="ranking">
 							</div>
 							<div class="col-sm-6">
-								<input class="form-control input-sm" name="value6" id="value6">
+								<select name="value6" id="value6">
+									<option value="Xuất sắc">Xuất sắc</option>
+									<option value="Giỏi">Giỏi</option>
+									<option value="Khá">Khá</option>
+									<option value="Trung Bình">Trung Bình</option>
+								</select>
 							</div>
 						</div>
 
@@ -247,7 +257,12 @@ if(count($issueaddresses) > 0){
 								<input class="form-control input-sm" name="key7" id="key7" value="mode of study">
 							</div>
 							<div class="col-sm-6">
-								<input class="form-control input-sm" name="value7" id="value7">
+								<select name="value7" id="value7">
+									<option value="Chính Quy">Chính Quy</option>
+									<option value="Chất lượng cao">Chất lượng cao</option>
+									<option value="Chương trình tiên tiến">Chương trình tiên tiến</option>
+									<option value="Đào tạo từ xa">Đào tạo từ xa</option>
+								</select>
 							</div>
 						</div>
 
