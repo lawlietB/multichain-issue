@@ -144,7 +144,7 @@ if(count($issueaddresses) > 0){
 							<select name="type" id="type">
 								<option value="BangTotNghiep">Bằng tốt nghiệp</option>
 								<option value="BangCuNhan">Bằng cử nhân</option>
-								<option value="BangKiSu">Bằng kĩ sư</option>
+								<option value="BangKySu">Bằng kỹ sư</option>
 								<option value="ChungChi">Chứng chỉ</option>
 							</select>
 								

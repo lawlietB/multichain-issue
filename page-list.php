@@ -100,8 +100,8 @@
 			$loaibang="BẰNG TỐT NGHIỆP";
 		else if($_POST['type'] == "BangCuNhan")
 			$loaibang="BẰNG CỬ NHÂN";
-		else if($_POST['type'] == "BangKiSu")
-			$loaibang="BẰNG KĨ SƯ";
+		else if($_POST['type'] == "BangKySu")
+			$loaibang="BẰNG KỸ SƯ";
 		else if($_POST['type'] == "ChungChi")
 			$loaibang="CHỨNG CHỈ";
 		$pdf->Cell(0,30,$loaibang,0,0,"C");
@@ -112,15 +112,15 @@
 
 		$pdf->SetFont('DejaVu','',16);
 		$pdf->Ln(40);
-		$pdf->Cell(0,0,"        Cho: ".$_POST['value1'].". MSSV: ".$_POST['value2'],0,0,"L");
+		$pdf->Cell(0,0,"         Cho: ".$_POST['value1'].".           MSSV: ".$_POST['value2'],0,0,"L");
 		$pdf->Ln(10);
-		$pdf->Cell(0,0,"        Giới tính: ".$_POST['value3'],0,0,"L");
+		$pdf->Cell(0,0,"         Giới tính: ".$_POST['value3'],0,0,"L");
 		$pdf->Ln(10);
-		$pdf->Cell(0,0,"        Sinh ngày: ".$_POST['value5'],0,0,"L");
+		$pdf->Cell(0,0,"         Sinh ngày: ".$_POST['value5'],0,0,"L");
 		$pdf->Ln(10);
-		$pdf->Cell(0,0,"        Xếp Loại: ".$_POST['value6'],0,0,"L");
+		$pdf->Cell(0,0,"         Xếp Loại: ".$_POST['value6'],0,0,"L");
 		$pdf->Ln(10);
-		$pdf->Cell(0,0,"        Hình thức đào tạo: ".$_POST['value7'],0,0,"L");
+		$pdf->Cell(0,0,"         Hình thức đào tạo: ".$_POST['value7'],0,0,"L");
 
 		// $pdf->Output();
 		$pdf->Output('file/'.$name.'.pdf');
