@@ -33,10 +33,12 @@
 	for ($subscribed=1; $subscribed>=0; $subscribed--) {
 ?>
 
-					<h3><?php echo $subscribed ? 'Subscribed streams' : 'Other streams'?></h3>
+					<h3><?php echo $subscribed ? 'Danh sách đã đăng ký' : 'Khác'?></h3>
 			
 <?php
 		foreach ($liststreams as $stream)
+			if($stream['name'] == 'root')
+				continue;
 			if ($stream['subscribed']==$subscribed) {
 ?>
 						<table class="table table-bordered table-condensed table-break-words table-striped">
@@ -109,7 +111,7 @@
 ?>
 				
 				<div class="col-sm-8">
-					<h3>Stream: <?php echo html($viewstream['name'])?> &ndash; <?php echo count($items)?> of <?php echo $countitems?> <?php echo ($countitems==1) ? 'item' : 'items'?><?php echo html($suffix)?></h3>
+					<h3>Danh sách: <?php echo html($viewstream['name'])?> &ndash; <?php echo count($items)?> of <?php echo $countitems?> <?php echo ($countitems==1) ? 'item' : 'items'?><?php echo html($suffix)?></h3>
 <?php
 			$oneoutput=false;
 			$items=array_reverse($items); // show most recent first
@@ -132,7 +134,7 @@
 							?></td>
 						</tr>
 						<tr>
-							<th>Key</th>
+							<th>Name</th>
 							<td><a href="./?chain=<?php echo html($_GET['chain'])?>&page=<?php echo html($_GET['page'])?>&stream=<?php echo html($viewstream['createtxid'])?>&key=<?php echo html($item['key'])?>"><?php echo html($item['key'])?></a></td>
 						</tr>
 						<tr>

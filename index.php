@@ -38,19 +38,19 @@
 			<nav class="navbar navbar-default">
 				<div id="navbar" class="navbar-collapse collapse col-md-4 col-xs-6">
 					<ul class="nav navbar-nav">
-						<li><a href="./?chain=<?php echo html($chain)?>" class="pair-first">Node |</a></li>
+						<li><a href="./?chain=<?php echo html($chain)?>" class="pair-first">NodeInfo |</a></li>
 						<li><a href="./?chain=<?php echo html($chain)?>&page=permissions" class="pair-center">| Quyền truy cập |</a></li>
-						<li><a href="./?chain=<?php echo html($chain)?>&page=issue" class="pair-center">|  Phát hành chứng chỉ |</a></li>
-						<li><a href="./?chain=<?php echo html($chain)?>&page=list" class="pair-center">|  Danh sách chứng chỉ |</a></li>
+						<!-- <li><a href="./?chain=<?php echo html($chain)?>&page=issue" class="pair-center">|  Phát hành chứng chỉ |</a></li> -->
+						<!-- <li><a href="./?chain=<?php echo html($chain)?>&page=list" class="pair-center">|  Danh sách chứng chỉ |</a></li> -->
 						<!-- <li><a href="./?chain=<?php echo html($chain)?>&page=update" class="pair-center">|  Update |</a></li> -->
-						<li><a href="./?chain=<?php echo html($chain)?>&page=balance" class="pair-center">|  Balance |</a></li>
-						<li><a href="./?chain=<?php echo html($chain)?>&page=send" class="pair-center"> |  Send |</a></li>
+						<!-- <li><a href="./?chain=<?php echo html($chain)?>&page=balance" class="pair-center">|  Balance |</a></li>
+						<li><a href="./?chain=<?php echo html($chain)?>&page=send" class="pair-center"> |  Send |</a></li> -->
 						<!-- <li><a href="./?chain=<?php echo html($chain)?>&page=offer" class="pair-center">|  Create Offer |</a></li>
-						<li><a href="./?chain=<?php echo html($chain)?>&page=accept" class="pair-center">|  Accept |</a></li>
+						<li><a href="./?chain=<?php echo html($chain)?>&page=accept" class="pair-center">|  Accept |</a></li> -->
 						<li><a href="./?chain=<?php echo html($chain)?>&page=create" class="pair-center">|  Create Stream |</a></li>
-						<li><a href="./?chain=<?php echo html($chain)?>&page=publish" class="pair-center">|  Publish |</a></li>
-						<li><a href="./?chain=<?php echo html($chain)?>&page=view" class="pair-center">|  View Streams|</a></li>
-						<li><a href="./?chain=<?php echo html($chain)?>&page=block" class="pair-last">|  View Block</a></li> -->
+						<li><a href="./?chain=<?php echo html($chain)?>&page=publish" class="pair-center">|  Phát hành chứng chỉ |</a></li>
+						<li><a href="./?chain=<?php echo html($chain)?>&page=view" class="pair-center">|  Danh sách chứng chỉ|</a></li>
+						<!-- <li><a href="./?chain=<?php echo html($chain)?>&page=block" class="pair-last">|  View Block</a></li> -->
 					</ul>
 				</div>
 			</nav>
@@ -68,9 +68,9 @@
 			case 'send':
 			// case 'offer':
 			// case 'accept':
-			// case 'create':
-			// case 'publish':
-			// case 'view':
+			case 'create':
+			case 'publish':
+			case 'view':
 			// case 'block':
 			case 'asset-file':
 				require_once 'page-'.$_GET['page'].'.php';
