@@ -47,7 +47,7 @@
 						<li><a href="./?chain=<?php echo html($chain)?>&page=send" class="pair-center"> |  Send |</a></li> -->
 						<!-- <li><a href="./?chain=<?php echo html($chain)?>&page=offer" class="pair-center">|  Create Offer |</a></li>
 						<li><a href="./?chain=<?php echo html($chain)?>&page=accept" class="pair-center">|  Accept |</a></li> -->
-						<li><a href="./?chain=<?php echo html($chain)?>&page=create" class="pair-center">|  Create Stream |</a></li>
+						<!-- <li><a href="./?chain=<?php echo html($chain)?>&page=create" class="pair-center">|  Create Stream |</a></li> -->
 						<li><a href="./?chain=<?php echo html($chain)?>&page=publish" class="pair-center">|  Phát hành chứng chỉ |</a></li>
 						<li><a href="./?chain=<?php echo html($chain)?>&page=view" class="pair-center">|  Danh sách chứng chỉ|</a></li>
 						<!-- <li><a href="./?chain=<?php echo html($chain)?>&page=block" class="pair-last">|  View Block</a></li> -->

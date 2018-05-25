@@ -2,25 +2,9 @@
 	$max_upload_size=multichain_max_data_size()-512; // take off space for file name and mime type
 
 	if (@$_POST['publish']) {
-
-		// $upload=@$_FILES['upload'];
-		// $upload_file=@$upload['tmp_name'];
-
-		// if (strlen($upload_file)) {
-		// 	$upload_size=filesize($upload_file);
-
-		// 	if ($upload_size>$max_upload_size) {
-		// 		echo '<div class="bg-danger" style="padding:1em;">Uploaded file is too large ('.number_format($upload_size).' > '.number_format($max_upload_size).' bytes).</div>';
-		// 		return;
-
-		// 	} else
-		// 		$data=file_to_txout_bin($upload['name'], $upload['type'], file_get_contents($upload_file));
-
-		// } else
-		// 	$data=string_to_txout_bin($_POST['text']);
-
-
 		$key = $_POST['type'].'_'.$_POST['school'].'_'.$_POST['idstudent'].'_'.$_POST['yearissue'];
+		no_displayed_error_result($createtxid, multichain('createfrom',
+			$_POST['from'], 'stream', $key, true));
 
 		$data_json =  new \stdClass();
 		$data_json->type        = $_POST['type'];
@@ -37,14 +21,14 @@
 
 		$data = json_decode($data_json);
 		$store_data = "Loại bằng:".$data->type
-					 ."Trường cấp:".$data->school
-					 ."Tên sinh viên/học viên:".$data->studentname
-					 ."Mã số:".$data->idstudent
-					 ."Giới tính:".$data->sex
-					 ."Ngày sinh:".$data->dateofbirth
-					 ."Chuyên ngành:".$data->majorin
-					 ."Hình thức đào tạo:".$data->modeofstudy
-					 ."Năm cấp:".$data->yearissue;
+					 .";Trường cấp:".$data->school
+					 .";Tên sinh viên/học viên:".$data->studentname
+					 .";Mã số:".$data->idstudent
+					 .";Giới tính:".$data->sex
+					 .";Ngày sinh:".$data->dateofbirth
+					 .";Chuyên ngành:".$data->majorin
+					 .";Hình thức đào tạo:".$data->modeofstudy
+					 .";Năm cấp:".$data->yearissue;
 		$store_data = bin2hex($store_data);
 		
 		// Create a connection
@@ -103,7 +87,7 @@
 		$pdf->Output('file/'.$key.'.pdf');
 		
 		if (no_displayed_error_result($publishtxid, multichain(
-			'publishfrom', $_POST['from'], $_POST['name'], $key, $store_data
+			'publishfrom', $_POST['from'],$key, $key, $store_data
 		)))
 			output_success_text('Item successfully published in transaction '.$publishtxid);
 	}
@@ -145,41 +129,6 @@
 							</select>
 							</div>
 						</div>
-						<div class="form-group" hidden>
-							<label for="name" class="col-sm-2 control-label">To stream:</label>
-							<div class="col-sm-9">
-							<select class="form-control" name="name" id="name">
-<?php
-	foreach ($liststreams as $stream) 
-		if ($stream['name']!='root') {
-?>
-								<option value="<?php echo html($stream['name'])?>"><?php echo html($stream['name'])?></option>
-<?php
-		}
-?>						
-							</select>
-							</div>
-						</div>
-						<!-- <div class="form-group">
-							<label for="key" class="col-sm-2 control-label">Optional key:</label>
-							<div class="col-sm-9">
-								<input class="form-control" name="key" id="key">
-							</div>
-						</div> -->
-
-
-
-						<!-- <div class="form-group">
-							<label for="upload" class="col-sm-2 control-label">Upload file:<br/><span style="font-size:75%; font-weight:normal;">Max <?php echo floor($max_upload_size/1024)?> KB</span></label>
-							<div class="col-sm-9">
-								<input class="form-control" type="file" name="upload" id="upload">
-							</div>
-						</div> -->
-						<!-- <div class="form-group">
-							<div class="col-sm-9">
-								<textarea class="form-control" rows="4" name="text" id="text"></textarea>
-							</div>
-						</div> -->
 
 						<!-- Data -->
 						<div class="form-group" hidden>

@@ -37,8 +37,6 @@
 			
 <?php
 		foreach ($liststreams as $stream)
-			if($stream['name'] == 'root')
-				continue;
 			if ($stream['subscribed']==$subscribed) {
 ?>
 						<table class="table table-bordered table-condensed table-break-words table-striped">
