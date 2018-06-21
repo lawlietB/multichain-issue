@@ -56,7 +56,7 @@
 			<div class="row">
 
 				<div class="col-sm-5">
-					<h3>Current Permissions</h3>
+					<h3>Các quyền hiện tại</h3>
 			
 <?php
 	if (no_displayed_error_result($listpermissions, multichain('listpermissions'))) {
@@ -83,19 +83,19 @@
 <?php
 			if (isset($label)) {
 ?>
-							<tr>
-								<th style="width:25%;">Label</th>
+							<tr class="active">
+								<th style="width:25%;">Tên</th>
 								<td><?php echo html($label)?></td>
 							</tr>
 <?php
 			}
 ?>
-							<tr>
-								<th style="width:25%;">Address</th>
+							<tr class="active">
+								<th style="width:25%;">Địa chỉ</th>
 								<td class="td-break-words small"><?php echo html($address)?><?php echo @$keymyaddresses[$address] ? ' (local)' : ''?></td>
 							</tr>
-							<tr>
-								<th>Permissions</th>
+							<tr class="active">
+								<th>Quyền</th>
 								<td><?php echo html($permissions_text)?></td>
 							</tr>
 						</table>
@@ -108,11 +108,11 @@
 	if(count($adminaddresses) > 0){
 ?>
 				<div class="col-sm-7">
-					<h3>Change Permissions</h3>
+					<h3>Cấp quyền(thay đổi quyền)</h3>
 					
 					<form class="form-horizontal" method="post" action="./?chain=<?php echo html($_GET['chain'])?>&page=<?php echo html($_GET['page'])?>">
 						<div class="form-group">
-							<label for="from" class="col-sm-3 control-label">Admin address:</label>
+							<label for="from" class="col-sm-3 control-label">Địa chỉ của Admin:</label>
 							<div class="col-sm-9">
 							<select class="form-control col-sm-6" name="from" id="from">
 <?php
@@ -126,25 +126,25 @@
 							</div>
 						</div>
 						<div class="form-group">
-							<label for="to" class="col-sm-3 control-label">For address:</label>
+							<label for="to" class="col-sm-3 control-label">Đến địa chỉ:</label>
 							<div class="col-sm-9">
 								<input class="form-control" name="to" id="to" placeholder="1..." value="<?php echo html($to)?>">
 							</div>
 						</div>
 						<div class="form-group">
-							<label class="col-sm-3 control-label">Operation:</label>
+							<label class="col-sm-3 control-label">Cách thức:</label>
 							<div class="col-sm-9">
 								<label class="radio-inline">
-									<input type="radio" name="operation" id="operation" value="grant" checked> Grant
+									<input type="radio" name="operation" id="operation" value="grant" checked> Thêm quyền
 								</label>
 								<label class="radio-inline">
-									<input type="radio" name="operation" id="operation" value="revoke"> Revoke
+									<input type="radio" name="operation" id="operation" value="revoke"> Bỏ quyền
 								</label>
 
 							</div>
 						</div>
 						<div class="form-group">
-							<label class="col-sm-3 control-label">Permissions:</label>
+							<label class="col-sm-3 control-label">Danh sách quyền: </label>
 							<div class="col-sm-9">
 <?php
 	foreach ($const_permission_names as $type => $label) {
@@ -161,7 +161,7 @@
 						</div>
 						<div class="form-group">
 							<div class="col-sm-offset-3 col-sm-9">
-								<input class="btn btn-default" type="submit" name="grantrevoke" value="Change Permissions">
+								<input class="btn btn-default" type="submit" name="grantrevoke" value="Thay đổi">
 							</div>
 						</div>
 					</form>

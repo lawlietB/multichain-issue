@@ -2,12 +2,19 @@
 	$max_upload_size=multichain_max_data_size()-512; // take off space for file name and mime type
 
 	if (@$_POST['publish']) {
-		$key = $_POST['type'].'_'.$_POST['school'].'_'.$_POST['idstudent'].'_'.$_POST['yearissue'];
+		$key = $_POST['type'].$_POST['school'].$_POST['idstudent'].$_POST['yearissue'];
 		no_displayed_error_result($createtxid, multichain('createfrom',
 			$_POST['from'], 'stream', $key, true));
 
 		$data_json =  new \stdClass();
-		$data_json->type        = $_POST['type'];
+		if($_POST['type'] == "BangTotNghiep")
+			$data_json->type="Bằng Tốt Nghiệp";
+		else if($_POST['type'] == "BangCuNhan")
+			$data_json->type="Bằng Cử Nhân";
+		else if($_POST['type'] == "BangKySu")
+			$data_json->type="Bằng Kỹ Sư";
+		else if($_POST['type'] == "ChungChi")
+			$data_json->type="Chứng Chỉ";
 		$data_json->school      = $_POST['school'];
 		$data_json->studentname = $_POST['studentname'];
 		$data_json->idstudent   = $_POST['idstudent'];
@@ -29,8 +36,10 @@
 					 .";Chuyên ngành:".$data->majorin
 					 .";Hình thức đào tạo:".$data->modeofstudy
 					 .";Năm cấp:".$data->yearissue;
-		$store_data = bin2hex($store_data);
 		
+		$store_data = bin2hex($store_data);
+		$hash = hash("sha256",$store_data);
+
 		// Create a connection
 		require('tfpdf.php');
 		$pdf = new tFPDF();
@@ -38,11 +47,11 @@
 
 		// Add a Unicode font (uses UTF-8)
 		$pdf->AddFont('DejaVu','','DejaVuSansCondensed.ttf',true);
-
+		// store hash in PDF
 		$pdf->SetFont('DejaVu','',0.1);
-		$pdf->Cell(0,0,$key.":".$store_data.";",1,0,"C");
+		$pdf->Cell(0,0,$key.":".$hash.";",1,0,"C");
 
-
+		//Start design pdf
 		$pdf->SetFont('DejaVu','',36);
 		$pdf->Ln(40);
 		$truong = '';
@@ -82,14 +91,16 @@
 		$pdf->Cell(0,0,"         Xếp Loại: ".$_POST['ranking'],0,0,"L");
 		$pdf->Ln(10);
 		$pdf->Cell(0,0,"         Hình thức đào tạo: ".$_POST['modeofstudy'],0,0,"L");
+		// End design pdf
 
-		// $pdf->Output();
+
+
 		$pdf->Output('file/'.$key.'.pdf');
 		
 		if (no_displayed_error_result($publishtxid, multichain(
 			'publishfrom', $_POST['from'],$key, $key, $store_data
 		)))
-			output_success_text('Item successfully published in transaction '.$publishtxid);
+			output_success_text('Lưu thành công với mã transaction là: '.$publishtxid.' với dữ liệu là: '.$hash);
 	}
 
 	$labels=multichain_labels();

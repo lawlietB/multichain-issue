@@ -15,24 +15,24 @@
 			<div class="row">
 
 				<div class="col-sm-12">
-					<h3>Set address label</h3>
+					<h3>Đổi tên:</h3>
 					
 					<form class="form-horizontal" method="post" action="./?chain=<?php echo html($_GET['chain'])?>&page=<?php echo html($_GET['page'])?>">
 						<div class="form-group">
-							<label for="address" class="col-sm-2 control-label">For address:</label>
+							<label for="address" class="col-sm-2 control-label">Địa chỉ:</label>
 							<div class="col-sm-9">
 								<input class="form-control" name="address" id="address" value="<?php echo html($address)?>">
 							</div>
 						</div>
 						<div class="form-group">
-							<label for="label" class="col-sm-2 control-label">Label:</label>
+							<label for="label" class="col-sm-2 control-label">Tên mới:</label>
 							<div class="col-sm-9">
 								<input class="form-control" name="label" id="label" value="<?php echo html($labels[$address])?>">
 							</div>
 						</div>
 						<div class="form-group">
 							<div class="col-sm-offset-2 col-sm-9">
-								<input class="btn btn-default" type="submit" name="setlabel" value="Set Label">
+								<input class="btn btn-default" type="submit" name="setlabel" value="Đổi tên">
 							</div>
 						</div>
 					</form>

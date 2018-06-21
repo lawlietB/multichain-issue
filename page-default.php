@@ -6,33 +6,33 @@
 			<div class="row">
 
 				<div class="col-sm-6">
-					<h3>My Node</h3>
+					<h3>Thông tin Node</h3>
 <?php
 	$getinfo=multichain_getinfo();
 	if (is_array($getinfo)) {
 ?>
-					<table class="table table-bordered table-striped">
-						<tr>
-							<th>Name</th>
+					<table class="table table-bordered table-hover">
+						<tr class="active">
+							<th>Tên chuỗi</th>
 							<td><?php echo html($getinfo['chainname'])?></td>
 						</tr>
-						<tr>
+						<tr class="active">
 							<th>Version</th>
 							<td><?php echo html($getinfo['version'])?></td>
 						</tr>
-						<tr>
+						<tr class="active">
 							<th>Protocol</th>
 							<td><?php echo html($getinfo['protocolversion'])?></td>
 						</tr>
-						<tr>
-							<th>Node address</th>
+						<tr class="active">
+							<th>Địa chỉ</th>
 							<td><?php echo html($getinfo['nodeaddress'])?></td>
 						</tr>
-						<tr>
+						<tr class="active">
 							<th>Blocks</th>
 							<td><?php echo html($getinfo['blocks'])?></td>
 						</tr>
-						<tr>
+						<tr class="active">
 							<th>Peers</th>
 							<td><?php echo html($getinfo['connections'])?></td>
 						</tr>
@@ -49,15 +49,15 @@
 <?php
 		foreach ($peerinfo as $peer) {
 ?>
-						<tr>
+						<tr class="active">
 							<th>Node IP address</th>
 							<td><?php echo html(strtok($peer['addr'], ':'))?></td>
 						</tr>
-						<tr>
+						<tr class="active">
 							<th>Handshake address</th>
 							<td class="td-break-words small"><?php echo html($peer['handshake'])?></td>
 						</tr>
-						<tr>
+						<tr class="active">
 							<th>Latency</th>
 							<td><?php echo html(number_format($peer['pingtime'], 3))?> sec</td>
 						</tr>
@@ -70,7 +70,7 @@
 ?>
 				</div>
 				<div class="col-sm-6">
-					<h3>My Addresses</h3>
+					<h3>Địa chỉ hiện tại</h3>
 			
 <?php
 	if (no_displayed_error_result($getaddresses, multichain('getaddresses', true))) {
@@ -107,14 +107,14 @@
 <?php
 			if (isset($label) || $cansetlabel) {
 ?>
-							<tr>
-								<th style="width:30%;">Label</th>
+							<tr class="active">
+								<th style="width:30%;">Tên:</th>
 								<td><?php echo html(@$label)?><?php
 								
 				if ($cansetlabel)
 					echo (isset($label) ? ' &ndash; ' : '').
 					'<a href="'.chain_page_url_html($chain, 'label', array('address' => $address)).'">'.
-					(isset($label) ? 'change label' : 'Set label').
+					(isset($label) ? 'Đổi tên' : 'Đặt tên').
 					'</a>';
 				
 								?></td>
@@ -122,22 +122,22 @@
 <?php
 			}
 ?>
-							<tr>
-								<th style="width:30%;">Address</th>
+							<tr class="active">
+								<th style="width:30%;">Địa chỉ</th>
 								<td class="td-break-words small"><?php echo html($address)?><?php echo $ismine ? '' : ' (watch-only)'?></td>
 							</tr>
-							<tr>
-								<th>Permissions</th>
+							<tr class="active">
+								<th>Quyền</th>
 								<td><?php echo html($permissions)?><?php
 
-					echo ' &ndash; <a href="'.chain_page_url_html($chain, 'permissions', array('address' => $address)).'">change</a>';
+					echo ' &ndash; <a href="'.chain_page_url_html($chain, 'permissions', array('address' => $address)).'">thay đổi</a>';
 
 							?></td></tr>
 <?php
 			if (isset($getmultibalances[$address])) {
 				foreach ($getmultibalances[$address] as $addressbalance) {
 ?>
-							<tr>
+							<tr class="active">
 								<th><?php echo html($addressbalance['name'])?></th>
 								<td><?php echo html($addressbalance['qty'])?></td>
 							</tr>
@@ -153,7 +153,7 @@
 					<form class="form-horizontal" method="post" action="<?php echo chain_page_url_html($chain)?>">
 						<div class="form-group">
 							<div class="col-xs-12">
-								<input class="btn btn-default" name="getnewaddress" type="submit" value="Get new address">
+								<input class="btn btn-default" name="getnewaddress" type="submit" value="Lấy địa chỉ mới">
 							</div>
 						</div>
 					</form>

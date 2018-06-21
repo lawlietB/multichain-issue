@@ -4,47 +4,39 @@
 // otherwise tFPDF will use [path to tFPDF]/font/unifont/ directory
 // define("_SYSTEM_TTFONTS", "C:/Windows/Fonts/");
 
-require('tfpdf.php');
+use setasign\Fpdi\Fpdi;
+use setasign\Fpdi\PdfReader;
 
-$pdf = new tFPDF();
-$pdf->AddPage('L');
+require_once('tfpdf.php');
+require_once('TcpdfFpdi.php');
+require_once('autoload.php');
 
-// Add a Unicode font (uses UTF-8)
-$pdf->AddFont('DejaVu','','DejaVuSansCondensed.ttf',true);
+$pdf = new Fpdi();
 
-$pdf->SetFont('DejaVu','',0.1);
-$pdf->Cell(0,30,$_POST['txid'].";",1,0,"C");
+$pageCount = $pdf->setSourceFile('bangtotnghiepmau.pdf');
+$pageId = $pdf->importPage(1, PdfReader\PageBoundaries::MEDIA_BOX);
 
+$pdf->addPage();
+$pdf->useImportedPage($pageId, 10, 10, 90);
 
-$pdf->SetFont('DejaVu','',36);
-$pdf->Ln(40);
-$truong = strtoupper ($_POST['truong']);
-$pdf->Cell(0,0,$truong,0,0,"C");
+$pdf->Output();
 
-$pdf->SetFont('DejaVu','',18);
-$pdf->Ln(15);
-$pdf->Cell(0,0,"Cấp",0,0,"C");
+// require('tfpdf.php');
 
-$pdf->SetFont('DejaVu','',60);
-$pdf->Ln(10);
-$loaibang = strtoupper ($_POST['loaibang']);
-$pdf->Cell(0,30,$loaibang,0,0,"C");
-$pdf->SetFont('DejaVu','',20);
-$pdf->Ln(15);
-$pdf->Cell(0,30,$_POST['namtotnghiep'],0,0,"C");
+// $pdf = new tFPDF();
+// $pdf->AddPage('L');
 
-$pdf->SetFont('DejaVu','',16);
-$pdf->Ln(40);
-$pdf->Cell(0,0,"        Cho: ".$_POST['hoten'].". MSSV: ".$_POST['mssv'],0,0,"L");
-$pdf->Ln(10);
-$pdf->Cell(0,0,"        Giới tính: ".$_POST['gioitinh'],0,0,"L");
-$pdf->Ln(10);
-$pdf->Cell(0,0,"        Sinh ngày: ".$_POST['ngaysinh'],0,0,"L");
-$pdf->Ln(10);
-$pdf->Cell(0,0,"        Xếp Loại: ".$_POST['xeploai'],0,0,"L");
-$pdf->Ln(10);
-$pdf->Cell(0,0,"        Hình thức đào tạo: ".$_POST['hinhthucdaotao'],0,0,"L");
+// // Add a Unicode font (uses UTF-8)
+// $pdf->AddFont('DejaVu','','DejaVuSansCondensed.ttf',true);
 
+// $pdf->setSourceFile('bangtotnghiepmau.pdf');
+// $tplIdx = $pdf->importPage(1); 
+// $pdf->useTemplate($tplIdx, 0, 0);
+
+// $pdf->SetFont('DejaVu','',36);
+// $pdf->SetTextColor(255,0,0); 
+// $pdf->SetXY(25, 25); 
+// $pdf->Write(0, "This is just a simple text");
+// // $pdf->Output('file/'.$_POST['filename'].'pdf');
 // $pdf->Output();
-$pdf->Output('../file/'.$_POST['filename'].'pdf');
 ?>
