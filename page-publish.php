@@ -22,6 +22,60 @@ function stripUnicode($str)
   	foreach($unicode as $nonUnicode=>$uni) $str = preg_replace("/($uni)/i",$nonUnicode,$str);
   	return $str;
 }
+function create_certificate($student_name, $id, $dob, $listenmark, $readmark, $testdate, $key, $hash)
+{
+	$student_name = stripUnicode($student_name);
+
+	require('fpdf.php');
+    require('FPDI/src/autoload.php');
+    $pdf = new Fpdi\Fpdi();
+    $pdf->AddPage('L'); //Theo chieu ngang
+
+    $pdf->setSourceFile("BangTOIEC.pdf");
+    $tplId = $pdf->importPage(1);
+    $pdf->useTemplate($tplId, 0, 2, 298);
+    
+    $pdf->SetFont('Helvetica','',0.1);
+	$pdf->Cell(0,0,$key.":".$hash.";",0,0,"C");
+
+    $pdf->SetFont('Helvetica','',14);
+
+    $pdf->SetTextColor(0, 0, 0);
+    $pdf->SetXY(90, 45);
+    $pdf->Write(0, $student_name);
+    
+
+    $pdf->SetTextColor(0, 0, 0);
+    $pdf->SetXY(70, 67);
+    $pdf->Write(0, $id);
+
+    $pdf->SetXY(130, 67);
+    $pdf->Write(0, $dob);
+
+    $pdf->SetXY(70, 93);
+    $pdf->Write(0, $testdate);
+
+    $pdf->SetXY(130, 93);
+    $pdf->Write(0, $testdate);
+
+    $pdf->SetFont('Helvetica','', 18);    
+    //Diem Listening min: 164.5, max: 228.5
+    $pdf->Image('DiemTOIEC.png', 164.5 + ($listenmark - 5) * 0.1306 , 41, '', '', '', '');
+    $pdf->SetXY(166 + ($listenmark - 5) * 0.1306, 50);
+    $pdf->Write(0, $listenmark);
+
+    //Diem Reading min: 164, max:228
+    $diem_doc = 350;
+    $pdf->Image('DiemTOIEC.png', 164.5 + ($readmark - 5) * 0.1306, 82, '', '', '', '');
+    $pdf->SetXY(166 + ($readmark - 5) * 0.1306, 91);
+    $pdf->Write(0, $readmark);
+
+    $pdf->SetFont('Helvetica','', 22);    
+    $pdf->SetXY(264, 84);
+    $pdf->Write(0, $listenmark + $listenmark);
+
+	$pdf->Output('file/'.$key.'.pdf','F');
+}
 
 function create_graduation_certificate($student_name, $dob, $ranking, $mos, $key, $hash)
 {
@@ -85,41 +139,71 @@ function create_graduation_certificate($student_name, $dob, $ranking, $mos, $key
 			$_POST['from'], 'stream', $key, true));
 
 		$data_json =  new \stdClass();
-		if($_POST['type'] == "BangTotNghiep")
-			$data_json->type="Bằng Tốt Nghiệp";
-		else if($_POST['type'] == "BangCuNhan")
-			$data_json->type="Bằng Cử Nhân";
-		else if($_POST['type'] == "BangKySu")
-			$data_json->type="Bằng Kỹ Sư";
-		else if($_POST['type'] == "ChungChi")
-			$data_json->type="Chứng Chỉ";
-		$data_json->school      = $_POST['school'];
-		$data_json->studentname = $_POST['studentname'];
-		$data_json->idstudent   = $_POST['idstudent'];
-		$data_json->sex         = $_POST['sex'];
-		$data_json->dateofbirth = $_POST['dateofbirth'];
-		$data_json->majorin     = $_POST['majorin'];
-		$data_json->modeofstudy = $_POST['modeofstudy'];
-		$data_json->yearissue   = $_POST['yearissue'];
+		if($_POST['type'] == "BangCuNhan" || $_POST['type'] == "BangKySu")
+		{
+			if($_POST['type'] == "BangCuNhan")
+				$data_json->type="Bằng Cử Nhân";
+			if($_POST['type'] == "BangKySu")			
+				$data_json->type="Bằng Kỹ Sư";
 
-		$data_json = json_encode($data_json);
-
-		$data = json_decode($data_json);
-		$store_data = "Loại bằng:".$data->type
-					 .";Trường cấp:".$data->school
-					 .";Tên sinh viên/học viên:".$data->studentname
-					 .";Mã số:".$data->idstudent
-					 .";Giới tính:".$data->sex
-					 .";Ngày sinh:".$data->dateofbirth
-					 .";Chuyên ngành:".$data->majorin
-					 .";Hình thức đào tạo:".$data->modeofstudy
-					 .";Năm cấp:".$data->yearissue;
+			$data_json->school      = $_POST['school'];
+			$data_json->studentname = $_POST['studentname'];
+			$data_json->idstudent   = $_POST['idstudent'];
+			$data_json->sex         = $_POST['sex'];
+			$data_json->dateofbirth = $_POST['dateofbirth'];
+			$data_json->majorin     = $_POST['majorin'];
+			$data_json->ranking     = $_POST['ranking'];
+			$data_json->modeofstudy = $_POST['modeofstudy'];
+			$data_json->yearissue   = $_POST['yearissue'];
 		
+			$data_json = json_encode($data_json);
+		
+			$data = json_decode($data_json);
+			$store_data = "Loại bằng:".$data->type
+						.";Trường cấp:".$data->school
+						.";Tên sinh viên/học viên:".$data->studentname
+						.";Mã số:".$data->idstudent
+						.";Giới tính:".$data->sex
+						.";Ngày sinh:".$data->dateofbirth
+						.";Chuyên ngành:".$data->majorin
+						.";Xếp loại:".$data->ranking
+						.";Hình thức đào tạo:".$data->modeofstudy
+						.";Năm cấp:".$data->yearissue;
+		}
+		else if($_POST['type'] == "ChungChi")
+		{
+			$data_json->type="Chứng Chỉ";
+			$data_json->school      = $_POST['school'];
+			$data_json->studentname = $_POST['studentname'];
+			$data_json->idstudent   = $_POST['idstudent'];
+			$data_json->sex         = $_POST['sex'];
+			$data_json->dateofbirth = $_POST['dateofbirth'];
+			$data_json->testdate    = $_POST['testdate'];			
+			$data_json->readmark    = $_POST['readmark'];
+			$data_json->listenmark  = $_POST['listenmark'];
+			$data_json = json_encode($data_json);
+			
+			$data = json_decode($data_json);
+			$store_data = "Loại bằng:".$data->type
+						.";Trường cấp:".$data->school
+						.";Tên sinh viên/học viên:".$data->studentname
+						.";Mã số:".$data->idstudent
+						.";Giới tính:".$data->sex
+						.";Ngày sinh:".$data->dateofbirth
+						.";Điểm nghe:".$data->listenmark
+						.";Điểm đọc:".$data->readmark
+						.";Ngày thi:".$data->testdate;
+		}
+					
 		$store_data = bin2hex($store_data);
 		$hash = hash("sha256",$store_data);
-
-		create_graduation_certificate($_POST['studentname'], $_POST['dateofbirth'], $_POST['ranking'], $_POST['modeofstudy'], $key, $hash);
 		
+		if($_POST['type'] == "BangCuNhan" || $_POST['type'] == "BangKySu")
+			create_graduation_certificate($_POST['studentname'], $_POST['dateofbirth'], $_POST['ranking'], $_POST['modeofstudy'], $key, $hash);
+		else if($_POST['type'] == "ChungChi")
+			create_certificate($_POST['studentname'], $_POST['idstudent'], $_POST['dateofbirth'], $_POST['listenmark'], $_POST['readmark'], $_POST['testdate'], $key, $hash);
+		
+
 		if (no_displayed_error_result($publishtxid, multichain(
 			'publishfrom', $_POST['from'],$key, $key, $store_data
 		)))
@@ -201,7 +285,7 @@ function create_graduation_certificate($student_name, $dob, $ranking, $mos, $key
 							<label for="name" class="col-sm-2 control-label">Loại chứng chỉ: </label>
 							<div class="col-sm-9">
 							<select name="type" id="type">
-								<option value="BangTotNghiep">Bằng tốt nghiệp</option>
+								<!-- <option value="BangTotNghiep">Bằng tốt nghiệp</option> -->
 								<option value="BangCuNhan">Bằng cử nhân</option>
 								<option value="BangKySu">Bằng kỹ sư</option>
 								<option value="ChungChi">Chứng chỉ</option>
@@ -210,10 +294,11 @@ function create_graduation_certificate($student_name, $dob, $ranking, $mos, $key
 						</div>						
 
 						<div class="form-group">
-							<label for="school" class="col-sm-2 control-label">Trường phát hành:</label>
+							<label for="school" class="col-sm-2 control-label">Tổ chức phát hành:</label>
 							<div class="col-sm-6">
 								<select name="school" id="school">
 									<option value="UIT">Trường Đại Học Công Nghệ Thông Tin</option>
+									<option value="IIG">Tổ chức IIG</option>
 								</select>
 							</div>
 						</div>
@@ -226,7 +311,7 @@ function create_graduation_certificate($student_name, $dob, $ranking, $mos, $key
 						</div>
 
 						<div class="form-group">
-							<label for="studentname" class="col-sm-2 control-label">MSSV:</label>
+							<label for="studentname" class="col-sm-2 control-label">Mã số:</label>
 							<div class="col-sm-6">
 								<input class="form-control input-sm" name="idstudent" id="idstudent">
 							</div>
@@ -249,14 +334,14 @@ function create_graduation_certificate($student_name, $dob, $ranking, $mos, $key
 							</div>
 						</div>
 
-						<div class="form-group">
+						<div class="form-group" id="_majorin">
 							<label for="studentname" class="col-sm-2 control-label">Ngành đào tạo:</label>
 							<div class="col-sm-6">
 								<input class="form-control input-sm" name="majorin" id="majorin">
 							</div>
 						</div>
 
-						<div class="form-group">
+						<div class="form-group" id="_ranking">
 							<label for="studentname" class="col-sm-2 control-label">Xếp loại:</label>
 							<div class="col-sm-6">
 								<select name="ranking" id="ranking">
@@ -268,7 +353,7 @@ function create_graduation_certificate($student_name, $dob, $ranking, $mos, $key
 							</div>
 						</div>
 
-						<div class="form-group">
+						<div class="form-group" id="_modeofstudy">
 							<label for="studentname" class="col-sm-2 control-label">Hình thức đào tạo:</label>
 							<div class="col-sm-6">
 								<select name="modeofstudy" id="modeofstudy">
@@ -280,7 +365,29 @@ function create_graduation_certificate($student_name, $dob, $ranking, $mos, $key
 							</div>
 						</div>
 
-						<div class="form-group" hidden>
+						<div class="form-group" id="_listenmark">
+							<label for="studentname" class="col-sm-2 control-label">Điểm nghe:</label>
+							<div class="col-sm-6">
+								<input class="form-control input-sm" name="listenmark" id="listenmark" min="5" max="495" type="number" step="5">
+							</div>
+						</div>
+
+						<div class="form-group" id="_readmark">
+							<label for="studentname" class="col-sm-2 control-label">Điểm đọc:</label>
+							<div class="col-sm-6">
+								<input class="form-control input-sm" name="readmark" id="readmark" min="5" max="495" type="number" step="5">
+							</div>
+						</div>
+
+						<div class="form-group" id="_testdate">
+							<label for="studentname" class="col-sm-2 control-label">Ngày thi:</label>
+							<div class="col-sm-6">
+								<input class="form-control input-sm" name="testdate" id="testdate" type="date">
+							</div>
+						</div>
+
+
+						<div class="form-group" id="_yearissue" hidden>
 							<label for="studentname" class="col-sm-2 control-label">Năm tốt nghiệp:</label>
 							<div class="col-sm-6">
 								<input class="form-control input-sm" name="yearissue" id="yearissue" value="<?php echo date("Y"); ?>">
@@ -298,3 +405,30 @@ function create_graduation_certificate($student_name, $dob, $ranking, $mos, $key
 
 				</div>
 			</div>
+			<script>
+				// $loaichungchi = $('#type').find(':selected').attr('value');
+				$("#_listenmark *").attr("disabled", "disabled").attr("hidden",true);	
+				$("#_readmark *").attr("disabled", "disabled").attr("hidden",true);	
+				$("#_testdate *").attr("disabled", "disabled").attr("hidden",true);	
+				$('#type').change(function(){
+					$loaichungchi = $(this).find(':selected').attr('value');
+					if($loaichungchi == "BangCuNhan" || $loaichungchi == "BangKySu")
+					{
+						$("#_listenmark *").attr("disabled", "disabled").attr("hidden",true);	
+						$("#_readmark *").attr("disabled", "disabled").attr("hidden",true);	
+						$("#_testdate *").attr("disabled", "disabled").attr("hidden",true);
+						$("#_modeofstudy *").attr("disabled", false).attr("hidden",false);	
+						$("#_majorin *").attr("disabled", false).attr("hidden",false);	
+						$("#_ranking *").attr("disabled", false).attr("hidden",false);	
+					}
+					else if($loaichungchi == "ChungChi"){
+						$("#_listenmark *").attr("disabled", false).attr("hidden",false);	
+						$("#_readmark *").attr("disabled", false).attr("hidden",false);
+						$("#_testdate *").attr("disabled", false).attr("hidden",false);
+						$("#_modeofstudy *").attr("disabled", "disabled").attr("hidden",true);	
+						$("#_majorin *").attr("disabled", "disabled").attr("hidden",true);
+						$("#_ranking *").attr("disabled", "disabled").attr("hidden",true);
+					}
+				});	
+
+			</script>
