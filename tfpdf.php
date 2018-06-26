@@ -9,8 +9,9 @@
 *******************************************************************************/
 
 define('tFPDF_VERSION','1.25');
+// define('FPDF_VERSION','1.81');
 
-class tFPDF
+class FPDF
 {
 
 var $unifontSubset;

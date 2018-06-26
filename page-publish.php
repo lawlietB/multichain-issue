@@ -1,4 +1,82 @@
 <?php
+use setasign\Fpdi;
+function stripUnicode($str)
+{
+	if(!$str) return false;
+	 $unicode = array(
+		'a'=>'á|à|ả|ã|ạ|ă|ắ|ặ|ằ|ẳ|ẵ|â|ấ|ầ|ẩ|ẫ|ậ',
+		'd'=>'đ',
+		'e'=>'é|è|ẻ|ẽ|ẹ|ê|ế|ề|ể|ễ|ệ',
+		'i'=>'í|ì|ỉ|ĩ|ị',
+		'o'=>'ó|ò|ỏ|õ|ọ|ô|ố|ồ|ổ|ỗ|ộ|ơ|ớ|ờ|ở|ỡ|ợ',
+		'u'=>'ú|ù|ủ|ũ|ụ|ư|ứ|ừ|ử|ữ|ự',
+		'y'=>'ý|ỳ|ỷ|ỹ|ỵ',
+		'A'=>'Á|À|Ả|Ã|Ạ|Ă|Ắ|Ằ|Ẳ|Ẵ|Ặ|Â|Ấ|Ầ|Ẩ|Ẫ|Ậ',
+		'D'=>'Đ',
+		'E'=>'É|È|Ẻ|Ẽ|Ẹ|Ê|Ế|Ề|Ể|Ễ|Ệ',
+		'I'=>'Í|Ì|Ỉ|Ĩ|Ị',
+		'O'=>'Ó|Ò|Ỏ|Õ|Ọ|Ô|Ố|Ồ|Ổ|Ỗ|Ộ|Ơ|Ớ|Ờ|Ở|Ỡ|Ợ',
+		'U'=>'Ú|Ù|Ủ|Ũ|Ụ|Ư|Ứ|Ừ|Ử|Ữ|Ự',
+		'Y'=>'Ý|Ỳ|Ỷ|Ỹ|Ỵ',
+	 );
+  	foreach($unicode as $nonUnicode=>$uni) $str = preg_replace("/($uni)/i",$nonUnicode,$str);
+  	return $str;
+}
+
+function create_graduation_certificate($student_name, $dob, $ranking, $mos, $key, $hash)
+{
+	//Process data
+	$student_name = stripUnicode($student_name);
+	$ranking = stripUnicode($ranking);
+	$mos = stripUnicode($mos);
+	require('fpdf.php');
+	require('FPDI/src/autoload.php');
+	
+	$pdf = new Fpdi\Fpdi();
+	$pdf->AddPage('L'); //Theo chieu ngang
+	
+	$pdf->setSourceFile("bangtotnghiepmau.pdf");
+	$tplId = $pdf->importPage(1);
+	$pdf->useTemplate($tplId, 0, 2, 298);
+	
+	// store hash in PDF
+	$pdf->SetFont('Helvetica','',0.1);
+	$pdf->Cell(0,0,$key.":".$hash.";",0,0,"C");
+
+	//Thong tin Bang tot nghiep
+	$pdf->SetFont('Helvetica','',12);
+	//Tieng Viet
+	$pdf->SetTextColor(0, 0, 0);
+	$pdf->SetXY(197, 102);
+	$pdf->Write(0, $student_name);
+	
+	$pdf->SetXY(197, 109.7);
+	$pdf->Write(0, $dob);
+	
+	$pdf->SetXY(213 , 116);
+	$pdf->Write(0, $ranking);
+	
+	$pdf->SetXY(213 , 123);
+	$pdf->Write(0, $mos);
+	
+	// Tieng Anh
+	$pdf->SetTextColor(0, 0, 0);
+	$pdf->SetXY(57, 108);
+	$pdf->Write(0, $student_name);
+
+	$pdf->SetXY(65, 115);
+	$pdf->Write(0, $dob);
+
+	$pdf->SetXY(76 , 122);
+	$pdf->Write(0, 'Good');
+
+	$pdf->SetXY(70 , 130);
+	$pdf->Write(0, 'Full-time');
+
+	$pdf->Output('file/'.$key.'.pdf','F');
+}
+
+
 	$max_upload_size=multichain_max_data_size()-512; // take off space for file name and mime type
 
 	if (@$_POST['publish']) {
@@ -40,62 +118,7 @@
 		$store_data = bin2hex($store_data);
 		$hash = hash("sha256",$store_data);
 
-		// Create a connection
-		require('tfpdf.php');
-		$pdf = new tFPDF();
-		$pdf->AddPage('L');
-
-		// Add a Unicode font (uses UTF-8)
-		$pdf->AddFont('DejaVu','','DejaVuSansCondensed.ttf',true);
-		// store hash in PDF
-		$pdf->SetFont('DejaVu','',0.1);
-		$pdf->Cell(0,0,$key.":".$hash.";",1,0,"C");
-
-		//Start design pdf
-		$pdf->SetFont('DejaVu','',36);
-		$pdf->Ln(40);
-		$truong = '';
-		if($_POST['school'] == "UIT")
-			$truong = "TRƯỜNG ĐẠI HỌC CÔNG NGHỆ THÔNG TIN";
-		$pdf->Cell(0,0,$truong,0,0,"C");
-
-		$pdf->SetFont('DejaVu','',18);
-		$pdf->Ln(15);
-		$pdf->Cell(0,0,"Cấp",0,0,"C");
-
-		$pdf->SetFont('DejaVu','',60);
-		$pdf->Ln(10);
-		$loaibang='';
-		if($_POST['type'] == "BangTotNghiep")
-			$loaibang="BẰNG TỐT NGHIỆP";
-		else if($_POST['type'] == "BangCuNhan")
-			$loaibang="BẰNG CỬ NHÂN";
-		else if($_POST['type'] == "BangKySu")
-			$loaibang="BẰNG KỸ SƯ";
-		else if($_POST['type'] == "ChungChi")
-			$loaibang="CHỨNG CHỈ";
-		$pdf->Cell(0,30,$loaibang,0,0,"C");
-		
-		$pdf->SetFont('DejaVu','',20);
-		$pdf->Ln(15);
-		$pdf->Cell(0,30,$_POST['yearissue'],0,0,"C");
-
-		$pdf->SetFont('DejaVu','',16);
-		$pdf->Ln(40);
-		$pdf->Cell(0,0,"         Cho: ".$_POST['studentname'].".           MSSV: ".$_POST['idstudent'],0,0,"L");
-		$pdf->Ln(10);
-		$pdf->Cell(0,0,"         Giới tính: ".$_POST['sex'],0,0,"L");
-		$pdf->Ln(10);
-		$pdf->Cell(0,0,"         Sinh ngày: ".$_POST['dateofbirth'],0,0,"L");
-		$pdf->Ln(10);
-		$pdf->Cell(0,0,"         Xếp Loại: ".$_POST['ranking'],0,0,"L");
-		$pdf->Ln(10);
-		$pdf->Cell(0,0,"         Hình thức đào tạo: ".$_POST['modeofstudy'],0,0,"L");
-		// End design pdf
-
-
-
-		$pdf->Output('file/'.$key.'.pdf');
+		create_graduation_certificate($_POST['studentname'], $_POST['dateofbirth'], $_POST['ranking'], $_POST['modeofstudy'], $key, $hash);
 		
 		if (no_displayed_error_result($publishtxid, multichain(
 			'publishfrom', $_POST['from'],$key, $key, $store_data
@@ -136,7 +159,7 @@
 								<option value="<?php echo html($address)?>"><?php echo format_address_html($address, true, $labels)?></option>
 <?php
 	}
-?>						
+?>				
 							</select>
 							</div>
 						</div>
@@ -152,7 +175,7 @@
 								<option value="<?php echo html($address)?>"><?php echo format_address_html($address, true, $labels)?></option>
 <?php
 	}
-?>						
+?>			
 							</select>
 							</div>
 						</div>
@@ -169,7 +192,7 @@
 								<option value="<?php echo html($address)?>"><?php echo format_address_html($address, @$keymyaddresses[$address], $labels)?></option>
 <?php
 	}
-?>						
+?>					
 							</select>
 							</div>
 						</div>
