@@ -27,7 +27,7 @@
 						<div class="form-group">
 							<label for="label" class="col-sm-2 control-label">Tên mới:</label>
 							<div class="col-sm-9">
-								<input class="form-control" name="label" id="label" value="<?php echo html($labels[$address])?>">
+								<input class="form-control" name="label" id="label" value="">
 							</div>
 						</div>
 						<div class="form-group">

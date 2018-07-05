@@ -51,7 +51,7 @@
 						<!-- <li><a href="./?chain=<?php echo html($chain)?>&page=create" class="pair-center">|  Create Stream |</a></li> -->
 						<li><a href="./?chain=<?php echo html($chain)?>&page=publish" class="pair-center">|  Phát hành chứng chỉ |</a></li>
 						<li><a href="./?chain=<?php echo html($chain)?>&page=view" class="pair-center">|  Danh sách chứng chỉ|</a></li>
-						<!-- <li><a href="./?chain=<?php echo html($chain)?>&page=block" class="pair-last">|  View Block</a></li> -->
+						<li><a href="./?chain=<?php echo html($chain)?>&page=multisign" class="pair-last">|  Multisign</a></li>
 					</ul>
 				</div>
 			</nav>
@@ -72,7 +72,7 @@
 			case 'create':
 			case 'publish':
 			case 'view':
-			// case 'block':
+			case 'multisign':
 			case 'asset-file':
 				require_once 'page-'.$_GET['page'].'.php';
 				break;
